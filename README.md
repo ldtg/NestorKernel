@@ -8,3 +8,6 @@ Un kernel con reloj y tres tareas nacional y popular
 ## Compilacion
 * make: solo compila
 * make qemu: compila y lanza el kernel con qemu
+* make qemu-gdb: compila y lanza el kernel con qemu con conexion para gdb
+* make gdb: compila y lanza gdb (necesario qemu-gdb corriendo)
+
