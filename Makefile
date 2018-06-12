@@ -8,7 +8,7 @@ OBJS :=  $(patsubst src/,,$(SRCS:.c=.o))
 
 QEMU := qemu-system-i386 -serial mon:stdio
 KERN ?= bin/kern
-BOOT := -kernel $(KERN) $(QEMU_EXTRA)
+BOOT := -kernel $(KERN) 
 
 bin/kern: boot.o $(OBJS)
 	@mkdir -p bin
@@ -20,10 +20,10 @@ bin/kern: boot.o $(OBJS)
 	$(CC) $(CFLAGS) -c $<
 
 qemu: $(KERN)
-	$(QEMU) $(BOOT)
+	$(QEMU) $(BOOT) $(QEMU_EXTRA)
 
 qemu-gdb: $(KERN)
-	$(QEMU) $(BOOT) -S -gdb tcp:127.0.0.1:7508 
+	$(QEMU) $(BOOT) $(QEMU_EXTRA) -S -gdb tcp:127.0.0.1:7508 
 
 gdb:
 	gdb -q -s bin/kern -n -ex 'target remote 127.0.0.1:7508'
