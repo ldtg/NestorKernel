@@ -2,6 +2,7 @@
 *.d
 #binary
 bin/*
+.vscode
 # Object files
 *.o
 *.ko
