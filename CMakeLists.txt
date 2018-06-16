@@ -3,5 +3,8 @@ project(Kern2)
 
 set(CMAKE_C_STANDARD 99)
 
-set(SOURCE_FILES main.c)
+set(SOURCE_FILES
+        kern.c
+        write.c
+        boot.S)
 add_executable(Kern2 ${SOURCE_FILES})

@@ -84,7 +84,16 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/darius/CLionProjects/Kern2/boot.S">
+			<Option target="Kern2"/>
+		</Unit>
+		<Unit filename="/home/darius/CLionProjects/Kern2/kern.c">
+			<Option target="Kern2"/>
+		</Unit>
 		<Unit filename="/home/darius/CLionProjects/Kern2/main.c">
+			<Option target="Kern2"/>
+		</Unit>
+		<Unit filename="/home/darius/CLionProjects/Kern2/write.c">
 			<Option target="Kern2"/>
 		</Unit>
 		<Unit filename="/home/darius/CLionProjects/Kern2/CMakeLists.txt">

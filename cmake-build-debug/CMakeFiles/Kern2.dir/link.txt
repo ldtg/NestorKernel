@@ -1,1 +1,1 @@
-/usr/bin/cc  -g   CMakeFiles/Kern2.dir/main.c.o  -o Kern2 
+/usr/bin/cc  -g   CMakeFiles/Kern2.dir/kern.c.o CMakeFiles/Kern2.dir/write.c.o CMakeFiles/Kern2.dir/main.c.o  -o Kern2 

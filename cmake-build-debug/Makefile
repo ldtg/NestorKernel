@@ -123,6 +123,33 @@ Kern2/fast:
 	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/build
 .PHONY : Kern2/fast
 
+kern.o: kern.c.o
+
+.PHONY : kern.o
+
+# target to build an object file
+kern.c.o:
+	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/kern.c.o
+.PHONY : kern.c.o
+
+kern.i: kern.c.i
+
+.PHONY : kern.i
+
+# target to preprocess a source file
+kern.c.i:
+	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/kern.c.i
+.PHONY : kern.c.i
+
+kern.s: kern.c.s
+
+.PHONY : kern.s
+
+# target to generate assembly for a file
+kern.c.s:
+	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/kern.c.s
+.PHONY : kern.c.s
+
 main.o: main.c.o
 
 .PHONY : main.o
@@ -150,6 +177,33 @@ main.c.s:
 	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/main.c.s
 .PHONY : main.c.s
 
+write.o: write.c.o
+
+.PHONY : write.o
+
+# target to build an object file
+write.c.o:
+	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/write.c.o
+.PHONY : write.c.o
+
+write.i: write.c.i
+
+.PHONY : write.i
+
+# target to preprocess a source file
+write.c.i:
+	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/write.c.i
+.PHONY : write.c.i
+
+write.s: write.c.s
+
+.PHONY : write.s
+
+# target to generate assembly for a file
+write.c.s:
+	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/write.c.s
+.PHONY : write.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -159,9 +213,15 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... Kern2"
+	@echo "... kern.o"
+	@echo "... kern.i"
+	@echo "... kern.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... write.o"
+	@echo "... write.i"
+	@echo "... write.s"
 .PHONY : help
 
 

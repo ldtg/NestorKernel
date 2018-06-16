@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/Kern2.dir/kern.c.o"
+  "CMakeFiles/Kern2.dir/write.c.o"
   "CMakeFiles/Kern2.dir/main.c.o"
   "Kern2.pdb"
   "Kern2"

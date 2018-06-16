@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/darius/CLionProjects/Kern2/kern.c
+lib/decls.h
+/home/darius/CLionProjects/Kern2/lib/decls.h
+lib/interrupts.h
+/home/darius/CLionProjects/Kern2/lib/interrupts.h
+lib/multiboot.h
+/home/darius/CLionProjects/Kern2/lib/multiboot.h
+lib/string.h
+/home/darius/CLionProjects/Kern2/lib/string.h
+
+/home/darius/CLionProjects/Kern2/lib/decls.h
+stdint.h
+-
+
+/home/darius/CLionProjects/Kern2/lib/interrupts.h
+stdint.h
+-
+
+/home/darius/CLionProjects/Kern2/lib/multiboot.h
+stdint.h
+-
+
+/home/darius/CLionProjects/Kern2/lib/string.h
+stddef.h
+-
+
+/home/darius/CLionProjects/Kern2/main.c
+stdio.h
+-
+
+/home/darius/CLionProjects/Kern2/write.c
+lib/decls.h
+/home/darius/CLionProjects/Kern2/lib/decls.h
+

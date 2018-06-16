@@ -4,7 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
+  "/home/darius/CLionProjects/Kern2/kern.c" "/home/darius/CLionProjects/Kern2/cmake-build-debug/CMakeFiles/Kern2.dir/kern.c.o"
   "/home/darius/CLionProjects/Kern2/main.c" "/home/darius/CLionProjects/Kern2/cmake-build-debug/CMakeFiles/Kern2.dir/main.c.o"
+  "/home/darius/CLionProjects/Kern2/write.c" "/home/darius/CLionProjects/Kern2/cmake-build-debug/CMakeFiles/Kern2.dir/write.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

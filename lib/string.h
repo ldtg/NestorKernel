@@ -57,4 +57,7 @@ size_t strlcat(char *, const char *, size_t);
 char *strtok_r(char *, const char *, char **);
 size_t strnlen(const char *, size_t);
 
+/** IMPLEMENTADOS **/
+char* strncat(char *dest, const char *src, size_t n);
+
 #endif /* lib/string.h */

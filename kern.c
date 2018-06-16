@@ -12,7 +12,12 @@ void kmain(const multiboot_info_t *mbi){
         char *cmdline = (void *) mbi->cmdline;
         // Aquí usar strlcat() para concatenar cmdline a buf.
         strlcat(buf, cmdline, CMD_BUF_SIZE);
-        vga_write(buf, 9, WHITE_BLUE);
+
+//        strncat(buf, cmdline, CMD_BUF_SIZE - strlen(buf));
+//        vga_write(buf, 9, WHITE_BLUE);
+  //     vga_write("vga_write() from stack1", 12, 0x17);
+    //   vga_write("vga_write() from stack2", 13, 0x90);
+       two_stacks();
     }
 }
 

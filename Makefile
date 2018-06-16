@@ -10,7 +10,7 @@ QEMU := qemu-system-i386 -serial mon:stdio
 KERN ?= bin/kern
 BOOT := -kernel $(KERN) 
 
-bin/kern: boot.o $(OBJS)
+bin/kern: boot.o stack.o $(OBJS)
 	@mkdir -p bin
 	ld -m elf_i386 -Ttext 0x100000 $^ $(LIBGCC) -o $@
 	# Verificar imagen Multiboot v1.
