@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "interrupts.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "decls.h": "c"
     }
 }

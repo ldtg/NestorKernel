@@ -18,8 +18,9 @@ void kmain(const multiboot_info_t *mbi){
 //        vga_write(buf, 9, WHITE_BLUE);
        //     vga_write("vga_write() from stack1", 12, 0x17);
        //   vga_write("vga_write() from stack2", 13, 0x90);
-       //two_stacks();
+       two_stacks();
        two_stacks_c();
+       vga_write2("Funciona vga_write2?", 18, 0xE0);
      }
 }
 
@@ -36,7 +37,7 @@ void two_stacks_c() {
   //vga_write("vga_write() from stack1", 15, 0x57);
     *(--stack1_ptr) = 0x57;
     *(--stack1_ptr) = 15;
-    *(--stack1_ptr) =  (uintptr_t) "vga_write() from stack1";
+    *(--stack1_ptr) =  (uintptr_t) "vga_write() from stack1 C";
 
   // Preparar, en s2, la llamada:
   //vga_write("vga_write() from stack2", 16, 0xD0);
@@ -44,7 +45,7 @@ void two_stacks_c() {
   // AYUDA 3: para esta segunda llamada, usar esta forma de
   // asignación alternativa:
   stack2_ptr -= 3;
-  stack2_ptr[0] = (uintptr_t) "vga_write() from stack2";
+  stack2_ptr[0] = (uintptr_t) "vga_write() from stack2 C";
   stack2_ptr[1] = 16;
   stack2_ptr[2] = 0xD0;
 
