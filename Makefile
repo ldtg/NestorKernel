@@ -4,13 +4,13 @@ CPPFLAGS := -nostdlibinc -idirafter lib
 LIBGCC := $(shell $(CC) $(CFLAGS) -print-libgcc-file-name)
 CC := clang
 SRCS := $(wildcard *.c) $(wildcard lib/*.c)
-OBJS :=  $(patsubst src/,,$(SRCS:.c=.o)) 
+OBJS :=  $(patsubst %.S,%.o,$(wildcard *.S)) $(patsubst %.c,%.o,$(SRCS)) 
 
 QEMU := qemu-system-i386 -serial mon:stdio
 KERN ?= bin/kern
 BOOT := -kernel $(KERN) 
-
-bin/kern: boot.o stack.o tasks.o $(OBJS)
+# boot.o stack.o tasks.o funcs.o 
+bin/kern: $(OBJS)
 	@mkdir -p bin
 	ld -m elf_i386 -Ttext 0x100000 $^ $(LIBGCC) -o $@
 	# Verificar imagen Multiboot v1.
