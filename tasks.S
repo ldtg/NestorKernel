@@ -24,5 +24,26 @@ task_exec:
         leave
         ret
 
+.text
+.globl task_swap
+task_swap:
+        // push calle saved
+        push %ebx
+        push %ebp
+        push %esi
+        push %edi
+        
+        //intercambiar esp y *esp_parametro
+        movl 20(%esp), %eax // eax= esp_parametro
+        movl 0(%eax), %edx // edx = *esp_parametro
+        movl %esp, 0(%eax) // esp_parametro = esp
+        movl %edx, %esp // 
+        
+        //pop calle saved
+        pop %edi
+        pop %esi
+        pop %ebp
+        pop %ebx
 
+        ret
         
