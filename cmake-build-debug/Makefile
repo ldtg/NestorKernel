@@ -123,6 +123,33 @@ Kern2/fast:
 	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/build
 .PHONY : Kern2/fast
 
+interrupts.o: interrupts.c.o
+
+.PHONY : interrupts.o
+
+# target to build an object file
+interrupts.c.o:
+	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/interrupts.c.o
+.PHONY : interrupts.c.o
+
+interrupts.i: interrupts.c.i
+
+.PHONY : interrupts.i
+
+# target to preprocess a source file
+interrupts.c.i:
+	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/interrupts.c.i
+.PHONY : interrupts.c.i
+
+interrupts.s: interrupts.c.s
+
+.PHONY : interrupts.s
+
+# target to generate assembly for a file
+interrupts.c.s:
+	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/interrupts.c.s
+.PHONY : interrupts.c.s
+
 kern.o: kern.c.o
 
 .PHONY : kern.o
@@ -150,32 +177,32 @@ kern.c.s:
 	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/kern.c.s
 .PHONY : kern.c.s
 
-main.o: main.c.o
+lib/string.o: lib/string.c.o
 
-.PHONY : main.o
+.PHONY : lib/string.o
 
 # target to build an object file
-main.c.o:
-	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/main.c.o
-.PHONY : main.c.o
+lib/string.c.o:
+	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/lib/string.c.o
+.PHONY : lib/string.c.o
 
-main.i: main.c.i
+lib/string.i: lib/string.c.i
 
-.PHONY : main.i
+.PHONY : lib/string.i
 
 # target to preprocess a source file
-main.c.i:
-	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/main.c.i
-.PHONY : main.c.i
+lib/string.c.i:
+	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/lib/string.c.i
+.PHONY : lib/string.c.i
 
-main.s: main.c.s
+lib/string.s: lib/string.c.s
 
-.PHONY : main.s
+.PHONY : lib/string.s
 
 # target to generate assembly for a file
-main.c.s:
-	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/main.c.s
-.PHONY : main.c.s
+lib/string.c.s:
+	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/lib/string.c.s
+.PHONY : lib/string.c.s
 
 write.o: write.c.o
 
@@ -213,12 +240,15 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... Kern2"
+	@echo "... interrupts.o"
+	@echo "... interrupts.i"
+	@echo "... interrupts.s"
 	@echo "... kern.o"
 	@echo "... kern.i"
 	@echo "... kern.s"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... lib/string.o"
+	@echo "... lib/string.i"
+	@echo "... lib/string.s"
 	@echo "... write.o"
 	@echo "... write.i"
 	@echo "... write.s"

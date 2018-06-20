@@ -105,45 +105,71 @@ CMakeFiles/Kern2.dir/write.c.o.provides: CMakeFiles/Kern2.dir/write.c.o.requires
 CMakeFiles/Kern2.dir/write.c.o.provides.build: CMakeFiles/Kern2.dir/write.c.o
 
 
-CMakeFiles/Kern2.dir/main.c.o: CMakeFiles/Kern2.dir/flags.make
-CMakeFiles/Kern2.dir/main.c.o: ../main.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/darius/CLionProjects/Kern2/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/Kern2.dir/main.c.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/Kern2.dir/main.c.o   -c /home/darius/CLionProjects/Kern2/main.c
+CMakeFiles/Kern2.dir/interrupts.c.o: CMakeFiles/Kern2.dir/flags.make
+CMakeFiles/Kern2.dir/interrupts.c.o: ../interrupts.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/darius/CLionProjects/Kern2/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/Kern2.dir/interrupts.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/Kern2.dir/interrupts.c.o   -c /home/darius/CLionProjects/Kern2/interrupts.c
 
-CMakeFiles/Kern2.dir/main.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/Kern2.dir/main.c.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/darius/CLionProjects/Kern2/main.c > CMakeFiles/Kern2.dir/main.c.i
+CMakeFiles/Kern2.dir/interrupts.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/Kern2.dir/interrupts.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/darius/CLionProjects/Kern2/interrupts.c > CMakeFiles/Kern2.dir/interrupts.c.i
 
-CMakeFiles/Kern2.dir/main.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/Kern2.dir/main.c.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/darius/CLionProjects/Kern2/main.c -o CMakeFiles/Kern2.dir/main.c.s
+CMakeFiles/Kern2.dir/interrupts.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/Kern2.dir/interrupts.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/darius/CLionProjects/Kern2/interrupts.c -o CMakeFiles/Kern2.dir/interrupts.c.s
 
-CMakeFiles/Kern2.dir/main.c.o.requires:
+CMakeFiles/Kern2.dir/interrupts.c.o.requires:
 
-.PHONY : CMakeFiles/Kern2.dir/main.c.o.requires
+.PHONY : CMakeFiles/Kern2.dir/interrupts.c.o.requires
 
-CMakeFiles/Kern2.dir/main.c.o.provides: CMakeFiles/Kern2.dir/main.c.o.requires
-	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/main.c.o.provides.build
-.PHONY : CMakeFiles/Kern2.dir/main.c.o.provides
+CMakeFiles/Kern2.dir/interrupts.c.o.provides: CMakeFiles/Kern2.dir/interrupts.c.o.requires
+	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/interrupts.c.o.provides.build
+.PHONY : CMakeFiles/Kern2.dir/interrupts.c.o.provides
 
-CMakeFiles/Kern2.dir/main.c.o.provides.build: CMakeFiles/Kern2.dir/main.c.o
+CMakeFiles/Kern2.dir/interrupts.c.o.provides.build: CMakeFiles/Kern2.dir/interrupts.c.o
+
+
+CMakeFiles/Kern2.dir/lib/string.c.o: CMakeFiles/Kern2.dir/flags.make
+CMakeFiles/Kern2.dir/lib/string.c.o: ../lib/string.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/darius/CLionProjects/Kern2/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/Kern2.dir/lib/string.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/Kern2.dir/lib/string.c.o   -c /home/darius/CLionProjects/Kern2/lib/string.c
+
+CMakeFiles/Kern2.dir/lib/string.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/Kern2.dir/lib/string.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/darius/CLionProjects/Kern2/lib/string.c > CMakeFiles/Kern2.dir/lib/string.c.i
+
+CMakeFiles/Kern2.dir/lib/string.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/Kern2.dir/lib/string.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/darius/CLionProjects/Kern2/lib/string.c -o CMakeFiles/Kern2.dir/lib/string.c.s
+
+CMakeFiles/Kern2.dir/lib/string.c.o.requires:
+
+.PHONY : CMakeFiles/Kern2.dir/lib/string.c.o.requires
+
+CMakeFiles/Kern2.dir/lib/string.c.o.provides: CMakeFiles/Kern2.dir/lib/string.c.o.requires
+	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/lib/string.c.o.provides.build
+.PHONY : CMakeFiles/Kern2.dir/lib/string.c.o.provides
+
+CMakeFiles/Kern2.dir/lib/string.c.o.provides.build: CMakeFiles/Kern2.dir/lib/string.c.o
 
 
 # Object files for target Kern2
 Kern2_OBJECTS = \
 "CMakeFiles/Kern2.dir/kern.c.o" \
 "CMakeFiles/Kern2.dir/write.c.o" \
-"CMakeFiles/Kern2.dir/main.c.o"
+"CMakeFiles/Kern2.dir/interrupts.c.o" \
+"CMakeFiles/Kern2.dir/lib/string.c.o"
 
 # External object files for target Kern2
 Kern2_EXTERNAL_OBJECTS =
 
 Kern2: CMakeFiles/Kern2.dir/kern.c.o
 Kern2: CMakeFiles/Kern2.dir/write.c.o
-Kern2: CMakeFiles/Kern2.dir/main.c.o
+Kern2: CMakeFiles/Kern2.dir/interrupts.c.o
+Kern2: CMakeFiles/Kern2.dir/lib/string.c.o
 Kern2: CMakeFiles/Kern2.dir/build.make
 Kern2: CMakeFiles/Kern2.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/darius/CLionProjects/Kern2/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking C executable Kern2"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/darius/CLionProjects/Kern2/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable Kern2"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Kern2.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -153,7 +179,8 @@ CMakeFiles/Kern2.dir/build: Kern2
 
 CMakeFiles/Kern2.dir/requires: CMakeFiles/Kern2.dir/kern.c.o.requires
 CMakeFiles/Kern2.dir/requires: CMakeFiles/Kern2.dir/write.c.o.requires
-CMakeFiles/Kern2.dir/requires: CMakeFiles/Kern2.dir/main.c.o.requires
+CMakeFiles/Kern2.dir/requires: CMakeFiles/Kern2.dir/interrupts.c.o.requires
+CMakeFiles/Kern2.dir/requires: CMakeFiles/Kern2.dir/lib/string.c.o.requires
 
 .PHONY : CMakeFiles/Kern2.dir/requires
 

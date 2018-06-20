@@ -4,14 +4,16 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
+  "/home/darius/CLionProjects/Kern2/interrupts.c" "/home/darius/CLionProjects/Kern2/cmake-build-debug/CMakeFiles/Kern2.dir/interrupts.c.o"
   "/home/darius/CLionProjects/Kern2/kern.c" "/home/darius/CLionProjects/Kern2/cmake-build-debug/CMakeFiles/Kern2.dir/kern.c.o"
-  "/home/darius/CLionProjects/Kern2/main.c" "/home/darius/CLionProjects/Kern2/cmake-build-debug/CMakeFiles/Kern2.dir/main.c.o"
+  "/home/darius/CLionProjects/Kern2/lib/string.c" "/home/darius/CLionProjects/Kern2/cmake-build-debug/CMakeFiles/Kern2.dir/lib/string.c.o"
   "/home/darius/CLionProjects/Kern2/write.c" "/home/darius/CLionProjects/Kern2/cmake-build-debug/CMakeFiles/Kern2.dir/write.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 
 # The include file search paths:
 set(CMAKE_C_TARGET_INCLUDE_PATH
+  "../lib"
   )
 
 # Targets to which this target links.

@@ -44,6 +44,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add directory="/home/darius/CLionProjects/Kern2/lib"/>
 					<Add directory="/usr/include/c++/5"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
 					<Add directory="/usr/include/c++/5/backward"/>
@@ -67,6 +68,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add directory="/home/darius/CLionProjects/Kern2/lib"/>
 					<Add directory="/usr/include/c++/5"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
 					<Add directory="/usr/include/c++/5/backward"/>
@@ -87,10 +89,25 @@
 		<Unit filename="/home/darius/CLionProjects/Kern2/boot.S">
 			<Option target="Kern2"/>
 		</Unit>
+		<Unit filename="/home/darius/CLionProjects/Kern2/interrupts.c">
+			<Option target="Kern2"/>
+		</Unit>
 		<Unit filename="/home/darius/CLionProjects/Kern2/kern.c">
 			<Option target="Kern2"/>
 		</Unit>
-		<Unit filename="/home/darius/CLionProjects/Kern2/main.c">
+		<Unit filename="/home/darius/CLionProjects/Kern2/lib/decls.h">
+			<Option target="Kern2"/>
+		</Unit>
+		<Unit filename="/home/darius/CLionProjects/Kern2/lib/interrupts.h">
+			<Option target="Kern2"/>
+		</Unit>
+		<Unit filename="/home/darius/CLionProjects/Kern2/lib/multiboot.h">
+			<Option target="Kern2"/>
+		</Unit>
+		<Unit filename="/home/darius/CLionProjects/Kern2/lib/string.c">
+			<Option target="Kern2"/>
+		</Unit>
+		<Unit filename="/home/darius/CLionProjects/Kern2/lib/string.h">
 			<Option target="Kern2"/>
 		</Unit>
 		<Unit filename="/home/darius/CLionProjects/Kern2/write.c">
