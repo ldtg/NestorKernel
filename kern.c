@@ -19,8 +19,6 @@ void kmain(const multiboot_info_t *mbi){
             vga_write("vga_write() from stack1", 12, 0x17);
           vga_write("vga_write() from stack2", 13, 0x90);*/
 
-
-
        two_stacks();
        two_stacks_c();
 

@@ -27,7 +27,7 @@ _start:
 
     // Si en eax esta MULTIBOOT_BOOTLOADER_MAGIC significa que 
     //   arrancamos con multiboot */
-    test %eax, MULTIBOOT_BOOTLOADER_MAGIC //TODO < SEGMENTATION FAULT
+    test %eax, MULTIBOOT_BOOTLOADER_MAGIC
     // Pongo cero en edx despues pongo ebx (direccion de memoria del struct pedido)
     //   si el cmp anterior dio equals y pusheo edx (0 si no equals o ebx si equals)
 
