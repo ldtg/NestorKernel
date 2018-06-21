@@ -18,8 +18,8 @@ breakpoint:
         movl $breakpoint_msg, -12(%ebp)
 
         // (3) Invocar a vga_write2()
-        leal -12(%esp), %esp
-        call vga_write2
+        leal -12(%ebp), %esp
+        call vga_write
         // (4) Restaurar registros.
 
         // (5) Finalizar ejecución del manejador.
