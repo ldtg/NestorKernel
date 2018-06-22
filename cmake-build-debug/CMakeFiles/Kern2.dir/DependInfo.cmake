@@ -4,6 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
+  "/home/darius/CLionProjects/Kern2/handlers.c" "/home/darius/CLionProjects/Kern2/cmake-build-debug/CMakeFiles/Kern2.dir/handlers.c.o"
   "/home/darius/CLionProjects/Kern2/interrupts.c" "/home/darius/CLionProjects/Kern2/cmake-build-debug/CMakeFiles/Kern2.dir/interrupts.c.o"
   "/home/darius/CLionProjects/Kern2/kern.c" "/home/darius/CLionProjects/Kern2/cmake-build-debug/CMakeFiles/Kern2.dir/kern.c.o"
   "/home/darius/CLionProjects/Kern2/lib/string.c" "/home/darius/CLionProjects/Kern2/cmake-build-debug/CMakeFiles/Kern2.dir/lib/string.c.o"

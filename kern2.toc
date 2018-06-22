@@ -1,0 +1,31 @@
+\select@language {english}
+\contentsline {section}{\numberline {1}Creaci\IeC {\'o}n de stacks en el kernel}{2}{section.1}
+\contentsline {subsection}{\numberline {1.1}kern2-stack}{2}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}kern2-cmdline}{2}{subsection.1.2}
+\contentsline {section}{\numberline {2}Concurrencia cooperativa}{3}{section.2}
+\contentsline {subsection}{\numberline {2.1}kern2-regcall}{3}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}kern2-swap}{3}{subsection.2.2}
+\contentsline {section}{\numberline {3}Interrupciones: reloj y teclado}{4}{section.3}
+\contentsline {subsection}{\numberline {3.1}kern2-idt}{4}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}kern2-isr}{4}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Sesi\IeC {\'o}n de GDB versi\IeC {\'o}n A}{4}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2}Sesi\IeC {\'o}n de GDB versi\IeC {\'o}n B}{6}{subsubsection.3.2.2}
+\contentsline {subsubsection}{\numberline {3.2.3}Versi\IeC {\'o}n final de breakpoint()}{9}{subsubsection.3.2.3}
+\contentsline {subsection}{\numberline {3.3}kern2-irq}{9}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}kern2-div}{9}{subsection.3.4}
+\contentsline {section}{\numberline {4}Anexo}{9}{section.4}
+\contentsline {subsubsection}{\numberline {4.0.1}contador.c}{9}{subsubsection.4.0.1}
+\contentsline {subsubsection}{\numberline {4.0.2}handlers.c}{10}{subsubsection.4.0.2}
+\contentsline {subsubsection}{\numberline {4.0.3}interrupts.c}{11}{subsubsection.4.0.3}
+\contentsline {subsubsection}{\numberline {4.0.4}kern.c}{11}{subsubsection.4.0.4}
+\contentsline {subsubsection}{\numberline {4.0.5}write.c}{12}{subsubsection.4.0.5}
+\contentsline {subsubsection}{\numberline {4.0.6}boot.S}{13}{subsubsection.4.0.6}
+\contentsline {subsubsection}{\numberline {4.0.7}funcs.S}{13}{subsubsection.4.0.7}
+\contentsline {subsubsection}{\numberline {4.0.8}idtentry.S}{14}{subsubsection.4.0.8}
+\contentsline {subsubsection}{\numberline {4.0.9}stack.S}{14}{subsubsection.4.0.9}
+\contentsline {subsubsection}{\numberline {4.0.10}tasks.S}{15}{subsubsection.4.0.10}
+\contentsline {subsubsection}{\numberline {4.0.11}lib/decls.h}{16}{subsubsection.4.0.11}
+\contentsline {subsubsection}{\numberline {4.0.12}lib/interrupts.h}{17}{subsubsection.4.0.12}
+\contentsline {subsubsection}{\numberline {4.0.13}lib/multiboot.h}{18}{subsubsection.4.0.13}
+\contentsline {subsubsection}{\numberline {4.0.14}lib/string.c}{21}{subsubsection.4.0.14}
+\contentsline {subsubsection}{\numberline {4.0.15}lib/string.h}{27}{subsubsection.4.0.15}

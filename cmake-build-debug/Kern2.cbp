@@ -89,6 +89,9 @@
 		<Unit filename="/home/darius/CLionProjects/Kern2/boot.S">
 			<Option target="Kern2"/>
 		</Unit>
+		<Unit filename="/home/darius/CLionProjects/Kern2/handlers.c">
+			<Option target="Kern2"/>
+		</Unit>
 		<Unit filename="/home/darius/CLionProjects/Kern2/interrupts.c">
 			<Option target="Kern2"/>
 		</Unit>

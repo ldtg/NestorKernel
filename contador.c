@@ -70,7 +70,7 @@ void contador_run() {
     asm ("movl %%ebp, %0" : "=r" (*(--stack2_ptr)) );
     asm ("movl %%ebx, %0" : "=r" (*(--stack2_ptr)) );
     
-    // Actualizar la variable estática ‘esp’ para que apunte
+    // Actualizar la variable estatica 'esp' para que apunte
     // al del segundo contador.
     esp = stack2_ptr;
     // Lanzar primer contador

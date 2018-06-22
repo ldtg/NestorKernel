@@ -9,7 +9,7 @@
 
 #define MAX_DESCRIPTORS 256
 
-// Multiboot siempre define "8" como el segmento de código.
+// Multiboot siempre define "8" como el segmento de codigo.
 // (Ver campo CS en `info registers` de QEMU.)
 static const uint8_t KSEG_CODE = 8;
 
@@ -23,6 +23,7 @@ static struct Gate idt[MAX_DESCRIPTORS] __attribute__ ((aligned (8)));
 
 void idt_init(void){
   idt_install(T_BRKPT, breakpoint);
+  idt_install(T_DIVIDE, divzero);
 
   idtr.base = (uintptr_t) &idt;
   idtr.limit = 8*MAX_DESCRIPTORS - 1;
@@ -41,4 +42,14 @@ void idt_install(uint8_t n, void (*handler)(void)) {
   idt[n].off_31_16 = addr >> 16;
 
   idt[n].present = 1;
+}
+
+void irq_init() {
+  irq_remap();
+
+  idt_install(T_TIMER, timer_asm);
+  idt_install(T_KEYBOARD, ack_irq);
+
+  // (3) Habilitar interrupciones.
+  asm("sti");
 }

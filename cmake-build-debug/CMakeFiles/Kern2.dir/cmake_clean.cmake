@@ -3,6 +3,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/Kern2.dir/write.c.o"
   "CMakeFiles/Kern2.dir/interrupts.c.o"
   "CMakeFiles/Kern2.dir/lib/string.c.o"
+  "CMakeFiles/Kern2.dir/handlers.c.o"
   "Kern2.pdb"
   "Kern2"
 )

@@ -3,14 +3,14 @@
 
 #include <stdint.h>
 
-// IDTR Register (see IA32-3A, §6.10 INTERRUPT DESCRIPTOR TABLE).
+// IDTR Register (see IA32-3A, 6.10 INTERRUPT DESCRIPTOR TABLE).
 struct IDTR {
     uint16_t limit;  // Limit
     uint32_t base;   // Base address
 } __attribute__((packed));
 
 
-// Gate descriptors for interrupts (see IA32-3A, §6.11 IDT DESCRIPTORS).
+// Gate descriptors for interrupts (see IA32-3A, 6.11 IDT DESCRIPTORS).
 struct Gate {
     unsigned off_15_0 : 16;   // Low 16 bits of offset in segment.
     unsigned segment : 16;    // Segment selector (always KSEG_CODE).
@@ -23,7 +23,7 @@ struct Gate {
 };
 
 
-// x86 exception numbers (see IA32-3A, §6.3 SOURCES OF INTERRUPTS).
+// x86 exception numbers (see IA32-3A, 6.3 SOURCES OF INTERRUPTS).
 enum Exception {
     T_DIVIDE = 0,    // Divide error
     T_DEBUG = 1,     // Debug exception
@@ -52,5 +52,21 @@ enum Interrupt {
     T_TIMER = 32,     // IRQ0
     T_KEYBOARD = 33,  // IRQ1
 };
+
+#define outb(port, data) \
+        asm("outb %b0,%w1" : : "a"(data), "d"(port));
+
+static void irq_remap() {
+  outb(0x20, 0x11);
+  outb(0xA0, 0x11);
+  outb(0x21, 0x20);
+  outb(0xA1, 0x28);
+  outb(0x21, 0x04);
+  outb(0xA1, 0x02);
+  outb(0x21, 0x01);
+  outb(0xA1, 0x01);
+  outb(0x21, 0x0);
+  outb(0xA1, 0x0);
+}
 
 #endif

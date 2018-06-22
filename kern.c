@@ -5,51 +5,59 @@
 #define CMD_BUF_SIZE 256
 #define USTACK_SIZE 4096
 
-void kmain(const multiboot_info_t *mbi){
-    vga_write("NestorKernel loading....", 2, WHITE_BLUE);
-    
-     if (mbi->flags & MULTIBOOT_INFO_CMDLINE) {
-       char buf[CMD_BUF_SIZE] = "cmdline: ";
-       char *cmdline = (void *) mbi->cmdline;
-       // Aquí usar strlcat() para concatenar cmdline a buf.
-       strlcat(buf, cmdline, CMD_BUF_SIZE);
+void kmain(const multiboot_info_t *mbi) {
+  int8_t linea;
+  uint8_t color;
 
-        /*strncat(buf, cmdline, CMD_BUF_SIZE - strlen(buf));
-        vga_write(buf, 9, WHITE_BLUE);
-            vga_write("vga_write() from stack1", 12, 0x17);
-          vga_write("vga_write() from stack2", 13, 0x90);*/
+  vga_write("NestorKernel loading....", 2, WHITE_BLUE);
 
-       two_stacks();
-       two_stacks_c();
+  if (mbi->flags & MULTIBOOT_INFO_CMDLINE) {
+    char buf[CMD_BUF_SIZE] = "cmdline: ";
+    char *cmdline = (void *) mbi->cmdline;
+    // Aqui usar strlcat() para concatenar cmdline a buf.
+    strlcat(buf, cmdline, CMD_BUF_SIZE);
 
-       idt_init();
-       asm("int3");
+    /*strncat(buf, cmdline, CMD_BUF_SIZE - strlen(buf));
+    vga_write(buf, 9, WHITE_BLUE);
+        vga_write("vga_write() from stack1", 12, 0x17);
+      vga_write("vga_write() from stack2", 13, 0x90);*/
 
-       vga_write2("Funciona vga_write2?", 18, 0xE0);
-       contador_run();
-     }
+    two_stacks();
+    two_stacks_c();
+
+    idt_init();
+    irq_init();
+
+    asm("int3");
+
+    asm("div %4"
+    : "=a"(linea), "=c"(color)
+    : "0"(18), "1"(0xE0), "b"(0), "d"(0));
+
+    vga_write2("Funciona vga_write2?", 18, 0xE0);
+    contador_run();
+  }
 }
-
 
 static uint8_t stack1[USTACK_SIZE] __attribute__((aligned(4096)));
 static uint8_t stack2[USTACK_SIZE] __attribute__((aligned(4096)));
 
 void two_stacks_c() {
   // Inicializar al *tope* de cada pila.
-  uintptr_t *stack1_ptr = stack1 + USTACK_SIZE * sizeof (uint8_t);
-  uintptr_t *stack2_ptr = stack2 + USTACK_SIZE * sizeof (uint8_t);
+  uintptr_t *stack1_ptr = stack1 + USTACK_SIZE * sizeof(uint8_t);
+  uintptr_t *stack2_ptr = stack2 + USTACK_SIZE * sizeof(uint8_t);
 
   // Preparar, en stack1, la llamada:
   //vga_write("vga_write() from stack1", 15, 0x57);
-    *(--stack1_ptr) = 0x57;
-    *(--stack1_ptr) = 15;
-    *(--stack1_ptr) =  (uintptr_t) "vga_write() from stack1 C";
+  *(--stack1_ptr) = 0x57;
+  *(--stack1_ptr) = 15;
+  *(--stack1_ptr) = (uintptr_t) "vga_write() from stack1 C";
 
   // Preparar, en s2, la llamada:
   //vga_write("vga_write() from stack2", 16, 0xD0);
 
   // AYUDA 3: para esta segunda llamada, usar esta forma de
-  // asignación alternativa:
+  // asignacion alternativa:
   stack2_ptr -= 3;
   stack2_ptr[0] = (uintptr_t) "vga_write() from stack2 C";
   stack2_ptr[1] = 16;
@@ -62,10 +70,10 @@ void two_stacks_c() {
   // olvidar restaurar el valor de %esp al terminar, y
   // compilar con: -fasm -fno-omit-frame-pointer.
   asm(
-    "movl %%esp, %%ebp;"
-    "leal 0(%0), %%esp;"
-    "call *%1;"
-    "movl %%ebp, %%esp;"
-    :: "r"(stack2_ptr), "r"(vga_write));
+  "movl %%esp, %%ebp;"
+      "leal 0(%0), %%esp;"
+      "call *%1;"
+      "movl %%ebp, %%esp;"
+  ::"r"(stack2_ptr), "r"(vga_write));
 }
 

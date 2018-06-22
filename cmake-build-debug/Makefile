@@ -123,6 +123,33 @@ Kern2/fast:
 	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/build
 .PHONY : Kern2/fast
 
+handlers.o: handlers.c.o
+
+.PHONY : handlers.o
+
+# target to build an object file
+handlers.c.o:
+	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/handlers.c.o
+.PHONY : handlers.c.o
+
+handlers.i: handlers.c.i
+
+.PHONY : handlers.i
+
+# target to preprocess a source file
+handlers.c.i:
+	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/handlers.c.i
+.PHONY : handlers.c.i
+
+handlers.s: handlers.c.s
+
+.PHONY : handlers.s
+
+# target to generate assembly for a file
+handlers.c.s:
+	$(MAKE) -f CMakeFiles/Kern2.dir/build.make CMakeFiles/Kern2.dir/handlers.c.s
+.PHONY : handlers.c.s
+
 interrupts.o: interrupts.c.o
 
 .PHONY : interrupts.o
@@ -240,6 +267,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... Kern2"
+	@echo "... handlers.o"
+	@echo "... handlers.i"
+	@echo "... handlers.s"
 	@echo "... interrupts.o"
 	@echo "... interrupts.i"
 	@echo "... interrupts.s"

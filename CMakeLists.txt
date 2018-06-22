@@ -11,7 +11,7 @@ set(SOURCE_FILES
         lib/interrupts.h
         lib/multiboot.h
         lib/string.h
-        lib/string.c)
+        lib/string.c handlers.c)
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/lib)
 

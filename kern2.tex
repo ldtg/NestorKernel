@@ -1,0 +1,575 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{listings} %For code in appendix
+\lstset
+{ %Formatting for code in appendix
+    language=C,
+    basicstyle=\footnotesize,
+    numbers=none,
+    stepnumber=1,
+    showstringspaces=false,
+    tabsize=1,
+    breaklines=true,
+    breakatwhitespace=false,
+}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\author{You}
+
+\begin{document}
+
+\begin{figure}
+ \centering
+   \includegraphics[width=0.75\textwidth]{fiuba.jpg}
+\end{figure}
+
+\begin{titlepage}
+		\centering
+		{\scshape\LARGE Universidad de Buenos Aires \par}
+		\vspace{1cm}
+		{\scshape\Large Sistemas operativos (75.08)\par}
+		\vspace{1.5cm}
+		{\huge\bfseries Kern 2\par}
+		\vspace{0.5cm}
+		{\Large\itshape Darius Maitia - 95436 \par}
+        \vspace{0.5cm}
+        {\Large\itshape Luis Tejerina - 96629 \par}
+        \vspace{0.5cm}
+    {\Large\itshape \par}
+    \vspace{1cm}  
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Creación de stacks en el kernel}
+\subsection{kern2-stack}
+\textbf{Explicar: ¿qué significa “estar alineado”?}\newline \newline Significa que la dirección incial de memoria alocada (en este caso para el stack) es múltiplo del número indicado. Por ejemplo, si se está alineado a 4KB, se está diciendo que la dirección puede ser: 0, 4KB, 8KB, 12KB...\newline 
+
+\textbf{Mostrar la sintaxis de C/GCC para alinear a 32 bits el arreglo kstack anterior.}\newline 
+\begin{lstlisting}
+unsigned unsigned char kstack[8192] __attribute__ ((aligned (32)));
+\end{lstlisting}
+
+\textbf{¿A qué valor se está inicializando kstack? ¿Varía entre la versión C y la versión ASM? (Leer la documentación de as sobre la directiva .space.)}
+
+Kstack se inicializa en cero. Efectivamente varía entre la versión C y la versión ASM; en C no se setea en cero el stack mientras que en ASM si lo hace.
+
+\textbf{Explicar la diferencia entre las directivas .align y .p2align de as, y mostrar cómo alinear el stack del kernel a 4 KiB usando cada una de ellas.}
+
+Align alinea al número indicado y .p2align alinea a 2 elevado a la potencia indicada.
+De este modo para alinear el stack del kernel a 4kb deberíamos escribir .align 4096 o .p2align 12.
+
+\subsection{kern2-cmdline}
+\textbf{Mostrar cómo implementar la misma concatenación, de manera correcta, usando strncat(3)}
+ 
+\begin{lstlisting}
+void kmain(const multiboot_info_t *mbi){
+    vga_write("NestorKernel loading....", 2, WHITE_BLUE);
+    
+     if (mbi->flags & MULTIBOOT_INFO_CMDLINE) {
+        char buf[CMD_BUF_SIZE] = "cmdline: ";
+        char *cmdline = (void *) mbi->cmdline;
+       
+        strncat(buf, cmdline, CMD_BUF_SIZE - strlen(buf));
+        vga_write(buf, 9, WHITE_BLUE);
+    }
+}
+\end{lstlisting}
+
+\textbf{Explicar cómo se comporta strlcat(3) si, erróneamente, se declarase buf con tamaño 12. ¿Introduce algún error el código?}\newline \newline Strlcat escribe en el buffer en lo que queda del buffer de destino libre para escribir. Si lo que hay que escribir (contactenar) es más que el espacio libre del buffer, corta en el límite sin cometer un segmentation fault. En todos los casos siempre se ocupa de finalizar la cadena con un barra cero.\newline 
+
+\textbf{\newline Compilar el siguiente programa, y explicar por qué se imprimen dos líneas distintas, en lugar de la misma dos veces:}\newline \newline \begin{lstlisting}
+#include <stdio.h>
+
+static void printf_sizeof_buf(char buf[256]) {
+    printf("sizeof buf = %zu\n", sizeof buf);
+}
+
+int main(void) {
+    char buf[256];
+    printf("sizeof buf = %zu\n", sizeof buf);
+    printf_sizeof_buf(buf);
+}
+\end{lstlisting}
+
+
+Al ejecutar este código vemos por la consola:
+
+	sizeof buf = 256
+
+	sizeof buf = 8
+
+En C no se pueden pasar bloques de memoria como parámetro, se pasan punteros a bloques de memoria. Al ser el parámetro de la funcion printf\_sizeof\_buf un char buf[256], en sí ese parámetro es un puntero a un array en memoria de 256 chars. Como tal, sizeof buf adentro de esa función va a ser el tamaño de un puntero, en este caso 8 bytes.
+
+\section{Concurrencia cooperativa}
+
+\subsection{kern2-regcall}
+
+\textbf{Mostrar con objdump -d el código generado por GCC para la siguiente llamada a vga\_write2() desde la función principal:}
+\begin{lstlisting}
+void kmain(const multiboot_info_t *mbi) {
+    vga_write("kern2 loading.............", 8, 0x70);
+
+    two_stacks();
+    two_stacks_c();
+
+    vga_write2("Funciona vga_write2?", 18, 0xE0);
+}
+\end{lstlisting}
+El código generado por GCC es:
+\begin{lstlisting}
+	lea    0x0,%eax
+	mov    $0x12,%edx
+	mov    $0xe0,%ecx
+	call   56 <kmain+0x56>
+\end{lstlisting}
+Podemos observar que utiliza el pasaje de argumentos por registros.
+
+\subsection{kern2-swap}
+
+\textbf{Explicar, para el stack de cada contador, cuántas posiciones se asignan, y qué representa cada una.}
+\newline Para el stack del primer contador se asignan 3 posiciones, una para cada argumento de la llamada a contador\_yield en orden inverso:
+\begin{lstlisting}
+    //contador_yield(100, 0, 0x2F);
+    *(--stack1_ptr) = 0x2F;
+    *(--stack1_ptr) = 0;
+    *(--stack1_ptr) = 100;
+\end{lstlisting}
+Para el stack del segundo contador se asignan, en primer lugar los argumentos de contador\_yield ademas de la direccion de esa funcion para que al retornar de task\_swap la primera vez retorne a la funcion contador\_yield, además de una extra para seguir la convencio de llamadas, luego se encolan los registros callee saved para simular una llamada previa a task\_swap. 
+\begin{lstlisting}
+     //contador_yield(100, 1, 0x4F);
+    *(--stack2_ptr) = 0x4F;
+    *(--stack2_ptr) = 1;
+    *(--stack2_ptr) = 100;
+    *(--stack2_ptr) = &contador_yield;  //extra return address  
+    *(--stack2_ptr) = &contador_yield;
+    asm ("movl %%edi, %0" : "=r" (*(--stack2_ptr)) );
+    asm ("movl %%esi, %0" : "=r" (*(--stack2_ptr)) );
+    asm ("movl %%ebp, %0" : "=r" (*(--stack2_ptr)) );
+    asm ("movl %%ebx, %0" : "=r" (*(--stack2_ptr)) );
+\end{lstlisting}
+
+\newpage
+\section{Interrupciones: reloj y teclado}
+
+\subsection{kern2-idt}
+
+\textbf{¿Cuántos bytes ocupa una entrada en la IDT?}\newline \newline
+Una entrada de la IDT ocupa 8 bytes.
+
+\textbf{¿Cuántas entradas como máximo puede albergar la IDT?}\newline \newline
+La IDT puede albergar a lo sumo 256 entradas.
+
+\textbf{¿Cuál es el valor máximo aceptable para el campo limit del registro IDTR?}\newline \newline
+El registro IDTR se compone de 48 bits, 16 para el campo IDT Limit y el resto para el campo IDT Base Address.
+
+\textbf{Indicar qué valor exacto tomará el campo limit para una IDT de 64 descriptores solamente.}\newline \newline
+Para direccionar 64 descriptores, harían falta 6 bits (2**6 = 64) pero como que cada entrada ocupa 4 bytes, necesitamos 2 bits de offset, con lo que en total hacen falta 8 bits, con los dos menos significativos seteados en 0. En definitiva, el campo limit en binario tomará la forma de 11111100.
+
+\textbf{Consultar la sección 6.1 y explicar la diferencia entre interrupciones (§6.3) y excepciones (§6.4).}\newline \newline
+Las interrupciones y las excepciones ambas alteran el flujo del programa. Sin embargo las interrupciones se usan para manejar eventos externos (como el input del teclado) y las excepciones son usadas para manejar fallas en las instrucciones (como una división por cero).
+
+Las interrupciones son además manejadas por el procesador después de finalizar la instrucción que se estaba ejecutando, son también eventos asincrónicos generados por hardware (aunque no siempre) que no está sincronizado con las instrucciones del procesador. Por el contrario las excepciones si son eventos sincrónicos generados cuando el procesador detecta una condición predefinida mientras ejecuta instrucciones.
+
+\subsection{kern2-isr}
+
+\subsubsection{Sesión de GDB versión A}
+
+\subsubsection*{Paso 1} 
+\begin{list}{•}
+\item la impresión de la siguiente instrucción ejecutando display/i \$pc muestra: \newline
+=> 0xfff0:	add    \%al,(\%eax) \newline \newline 
+\end{list}
+
+\subsubsection*{Paso 2} 
+\begin{list}{•}
+\item Las instrucciones de código assembler mostradas por el comando disas al momento del punto de interrupción:
+
+\begin{lstlisting}
+
+(gdb) disas
+Dump of assembler code for function kmain:
+   0x001004e0 <+0>:	push   %ebp
+   0x001004e1 <+1>:	mov    %esp,%ebp
+   0x001004e3 <+3>:	push   %esi
+   0x001004e4 <+4>:	sub    $0x134,%esp
+   0x001004ea <+10>:	mov    0x8(%ebp),%eax
+   0x001004ed <+13>:	lea    0x100c3c,%ecx
+   0x001004f3 <+19>:	mov    $0x2,%edx
+   0x001004f8 <+24>:	mov    $0x1f,%esi
+   0x001004fd <+29>:	mov    %eax,-0x8(%ebp)
+   0x00100500 <+32>:	mov    %ecx,(%esp)
+   0x00100503 <+35>:	movl   $0x2,0x4(%esp)
+   0x0010050b <+43>:	movl   $0x1f,0x8(%esp)
+   0x00100513 <+51>:	mov    %esi,-0x110(%ebp)
+   0x00100519 <+57>:	mov    %edx,-0x114(%ebp)
+   0x0010051f <+63>:	call   0x1006a0 <vga_write>
+---Type <return> to continue, or q <return> to quit---
+   0x00100524 <+68>:	mov    -0x8(%ebp),%eax
+   0x00100527 <+71>:	mov    (%eax),%eax
+   0x00100529 <+73>:	and    $0x4,%eax
+   0x0010052e <+78>:	cmp    $0x0,%eax
+   0x00100533 <+83>:	je     0x1005c8 <kmain+232>
+   0x00100539 <+89>:	mov    $0x100,%eax
+   0x0010053e <+94>:	lea    -0x108(%ebp),%ecx
+   0x00100544 <+100>:	lea    0x100c9e,%edx
+   0x0010054a <+106>:	mov    %ecx,%esi
+   0x0010054c <+108>:	mov    %esi,(%esp)
+   0x0010054f <+111>:	mov    %edx,0x4(%esp)
+   0x00100553 <+115>:	movl   $0x100,0x8(%esp)
+   0x0010055b <+123>:	mov    %eax,-0x118(%ebp)
+   0x00100561 <+129>:	mov    %ecx,-0x11c(%ebp)
+   0x00100567 <+135>:	call   0x1006f0 <memcpy>
+   0x0010056c <+140>:	mov    -0x8(%ebp),%eax
+---Type <return> to continue, or q <return> to quit---
+   0x0010056f <+143>:	mov    0x10(%eax),%eax
+   0x00100572 <+146>:	mov    %eax,-0x10c(%ebp)
+   0x00100578 <+152>:	mov    -0x10c(%ebp),%eax
+   0x0010057e <+158>:	mov    -0x11c(%ebp),%ecx
+   0x00100584 <+164>:	mov    %ecx,(%esp)
+   0x00100587 <+167>:	mov    %eax,0x4(%esp)
+   0x0010058b <+171>:	movl   $0x100,0x8(%esp)
+   0x00100593 <+179>:	call   0x100bc0 <strlcat>
+   0x00100598 <+184>:	mov    %eax,-0x120(%ebp)
+   0x0010059e <+190>:	call   0x100044 <two_stacks>
+   0x001005a3 <+195>:	call   0x1005e0 <two_stacks_c>
+   0x001005a8 <+200>:	call   0x1003c0 <idt_init>
+=> 0x001005ad <+205>:	lea    0x100c55,%eax
+   0x001005b3 <+211>:	mov    $0x12,%edx
+   0x001005b8 <+216>:	mov    $0xe0,%ecx
+   0x001005bd <+221>:	int3   
+---Type <return> to continue, or q <return> to quit---
+   0x001005be <+222>:	call   0x100030 <vga_write2>
+   0x001005c3 <+227>:	call   0x1000c0 <contador_run>
+   0x001005c8 <+232>:	add    $0x134,%esp
+   0x001005ce <+238>:	pop    %esi
+   0x001005cf <+239>:	pop    %ebp
+   0x001005d0 <+240>:	ret   
+
+\end{lstlisting}
+\item el valor de \%esp (print \$esp) \newline
+\begin{lstlisting}
+(gdb) print $esp
+$1 = (void *) 0x103eb8
+\end{lstlisting}
+
+\item el valor de (\%esp) (x/xw \$esp)
+\begin{lstlisting}
+(gdb) x/xw $esp
+0x103eb8:	0x00103ee8
+
+\end{lstlisting}
+
+\item el valor de \$cs
+\begin{lstlisting}
+(gdb) print $cs
+$2 = 8
+
+\end{lstlisting}
+
+\item el resultado de print \$eflags y print/x \$eflags 
+\begin{lstlisting}
+(gdb) print $eflags
+$3 = [ AF ]
+(gdb) print/x $eflags
+$4 = 0x12
+\end{lstlisting}
+
+\end{list}
+
+\subsubsection*{Paso 3}
+Ejecutar la instrucción int3 mediante el comando de GDB stepi. La ejecución debería saltar directamente a la instrucción test \%eax, \%eax; en ese momento:
+
+\begin{list}{•}
+\item imprimir el valor de \%esp; ¿cuántas posiciones avanzó?
+\begin{lstlisting}
+(gdb) print $esp
+$7 = (void *) 0x103eac
+\end{lstlisting}
+Avanzó 12 posiciones.
+
+\item si avanzó N posiciones, mostrar (con x/Nwx \$sp) los N valores correspondientes
+\begin{lstlisting}
+(gdb) x/12wx $esp
+0x103eac:	0x001005be	0x00000008	0x00000012	0x00103ee8
+0x103ebc:	0x0010c000	0x00000100	0x00000000	0x00000000
+0x103ecc:	0x00000000	0x00000012	0x00103ee8	0x00000100
+\end{lstlisting}
+
+\item mostrar el valor de \$eflags
+\begin{lstlisting}
+(gdb) print $eflags
+$8 = [ AF ]
+\end{lstlisting}
+
+¿Qué representa cada valor?
+\begin{list}{•}{}
+\item 0x00103eac: Error Code
+\item 0x001005be: EIP
+\item 0x00000008: CS
+\item 0x00000012: EFLAGS
+\end{list}
+
+\end{list}
+
+\subsubsection*{Paso 4} Avanzar una instrucción más con stepi, ejecutando la instrucción TEST. Mostrar, como anteriormente, el valor del registro EFLAGS (en dos formatos distintos, usando print y print/x).\newline
+
+\begin{lstlisting}
+(gdb) print $eflags
+$2 = [ PF ]
+(gdb) print /x $eflags
+$10 = 0x6
+
+\end{lstlisting}
+
+\subsubsection*{Paso 5} Avanzar, por última vez, una instrucción, de manera que se ejecute IRET para la sesión A, y RET para la sesión B. Mostrar, de nuevo lo pedido que en el punto 1; y explicar cualquier diferencia entre ambas versiones A y B.
+
+\begin{lstlisting}
+1: x/i $pc
+=> 0x1005be <kmain+222>:	call   0x100030 <vga_write2>
+\end{lstlisting}
+
+\subsubsection{Sesión de GDB versión B}
+
+\subsubsection*{Paso 1} 
+\begin{list}{•}
+\item la impresión de la siguiente instrucción ejecutando display/i \$pc muestra: \newline
+=> 0xfff0:	add    \%al,(\%eax) \newline \newline 
+\end{list}
+
+\subsubsection*{Paso 2} 
+\begin{list}{•}
+\item Las instrucciones de código assembler mostradas por el comando disas al momento del punto de interrupción:
+
+\begin{lstlisting}
+
+(gdb) disas
+Dump of assembler code for function kmain:
+   0x001004e0 <+0>:	push   %ebp
+   0x001004e1 <+1>:	mov    %esp,%ebp
+   0x001004e3 <+3>:	push   %esi
+   0x001004e4 <+4>:	sub    $0x134,%esp
+   0x001004ea <+10>:	mov    0x8(%ebp),%eax
+   0x001004ed <+13>:	lea    0x100c3c,%ecx
+   0x001004f3 <+19>:	mov    $0x2,%edx
+   0x001004f8 <+24>:	mov    $0x1f,%esi
+   0x001004fd <+29>:	mov    %eax,-0x8(%ebp)
+   0x00100500 <+32>:	mov    %ecx,(%esp)
+   0x00100503 <+35>:	movl   $0x2,0x4(%esp)
+   0x0010050b <+43>:	movl   $0x1f,0x8(%esp)
+   0x00100513 <+51>:	mov    %esi,-0x110(%ebp)
+   0x00100519 <+57>:	mov    %edx,-0x114(%ebp)
+   0x0010051f <+63>:	call   0x1006a0 <vga_write>
+   0x00100524 <+68>:	mov    -0x8(%ebp),%eax
+   0x00100527 <+71>:	mov    (%eax),%eax
+   0x00100529 <+73>:	and    $0x4,%eax
+   0x0010052e <+78>:	cmp    $0x0,%eax
+   0x00100533 <+83>:	je     0x1005c8 <kmain+232>
+   0x00100539 <+89>:	mov    $0x100,%eax
+   0x0010053e <+94>:	lea    -0x108(%ebp),%ecx
+   0x00100544 <+100>:	lea    0x100c9e,%edx
+   0x0010054a <+106>:	mov    %ecx,%esi
+   0x0010054c <+108>:	mov    %esi,(%esp)
+   0x0010054f <+111>:	mov    %edx,0x4(%esp)
+   0x00100553 <+115>:	movl   $0x100,0x8(%esp)
+   0x0010055b <+123>:	mov    %eax,-0x118(%ebp)
+   0x00100561 <+129>:	mov    %ecx,-0x11c(%ebp)
+   0x00100567 <+135>:	call   0x1006f0 <memcpy>
+   0x0010056c <+140>:	mov    -0x8(%ebp),%eax
+   0x0010056f <+143>:	mov    0x10(%eax),%eax
+   0x00100572 <+146>:	mov    %eax,-0x10c(%ebp)
+   0x00100578 <+152>:	mov    -0x10c(%ebp),%eax
+   0x0010057e <+158>:	mov    -0x11c(%ebp),%ecx
+   0x00100584 <+164>:	mov    %ecx,(%esp)
+   0x00100587 <+167>:	mov    %eax,0x4(%esp)
+   0x0010058b <+171>:	movl   $0x100,0x8(%esp)
+   0x00100593 <+179>:	call   0x100bc0 <strlcat>
+---Type <return> to continue, or q <return> to quit---
+   0x00100598 <+184>:	mov    %eax,-0x120(%ebp)
+   0x0010059e <+190>:	call   0x100044 <two_stacks>
+   0x001005a3 <+195>:	call   0x1005e0 <two_stacks_c>
+   0x001005a8 <+200>:	call   0x1003c0 <idt_init>
+=> 0x001005ad <+205>:	lea    0x100c55,%eax
+   0x001005b3 <+211>:	mov    $0x12,%edx
+   0x001005b8 <+216>:	mov    $0xe0,%ecx
+   0x001005bd <+221>:	int3   
+   0x001005be <+222>:	call   0x100030 <vga_write2>
+   0x001005c3 <+227>:	call   0x1000c0 <contador_run>
+   0x001005c8 <+232>:	add    $0x134,%esp
+   0x001005ce <+238>:	pop    %esi
+   0x001005cf <+239>:	pop    %ebp
+   0x001005d0 <+240>:	ret    
+End of assembler dump.
+
+\end{lstlisting}
+
+\item el valor de \%esp (print \$esp) \newline
+\begin{lstlisting}
+(gdb) print $esp
+$1 = (void *) 0x103eb8
+\end{lstlisting}
+
+\item el valor de (\%esp) (x/xw \$esp)
+\begin{lstlisting}
+(gdb) x/xw $esp
+0x103eb8:	0x00103ee8
+
+\end{lstlisting}
+
+\item el valor de \$cs
+\begin{lstlisting}
+(gdb) print $cs
+$2 = 8
+\end{lstlisting}
+
+\item el resultado de print \$eflags y print/x \$eflags 
+\begin{lstlisting}
+(gdb) print $eflags
+$3 = [ AF ]
+(gdb) print/x $eflags
+$4 = 0x12
+\end{lstlisting}
+
+\end{list}
+
+\subsubsection*{Paso 3}
+Ejecutar la instrucción int3 mediante el comando de GDB stepi. La ejecución debería saltar directamente a la instrucción test \%eax, \%eax; en ese momento:
+
+\begin{list}{•}
+\item imprimir el valor de \%esp; ¿cuántas posiciones avanzó?
+\begin{lstlisting}
+(gdb) print $esp
+$7 = (void *) 0x103eac
+\end{lstlisting}
+Avanzó 12 posiciones.
+
+\item si avanzó N posiciones, mostrar (con x/Nwx \$sp) los N valores correspondientes
+\begin{lstlisting}
+(gdb) x/12wx $esp
+0x103eac:	0x001005be	0x00000008	0x00000012	0x00103ee8
+0x103ebc:	0x0010c000	0x00000100	0x00000000	0x00000000
+0x103ecc:	0x00000000	0x00000012	0x00103ee8	0x00000100
+\end{lstlisting}
+
+\item mostrar el valor de \$eflags
+\begin{lstlisting}
+(gdb) print $eflags
+$8 = [ AF ]
+\end{lstlisting}
+
+\item ¿Qué representa cada valor?
+\begin{list}{•}{}
+\item 0x00103eac: Error Code
+\item 0x001005be: EIP
+\item 0x00000008: CS
+\item 0x00000012: EFLAGS
+\end{list}
+
+\end{list}
+
+\subsubsection*{Paso 4} Avanzar una instrucción más con stepi, ejecutando la instrucción TEST. Mostrar, como anteriormente, el valor del registro EFLAGS (en dos formatos distintos, usando print y print/x).\newline
+
+\begin{lstlisting}
+(gdb) print $eflags
+$2 = [ PF ]
+(gdb) print /x $eflags
+$10 = 0x6
+
+\end{lstlisting}
+
+\subsubsection*{Paso 5}
+Avanzar, por última vez, una instrucción, de manera que se ejecute IRET para la sesión A, y RET para la sesión B. Mostrar, de nuevo lo pedido que en el punto 1; y explicar cualquier diferencia entre ambas versiones A y B.
+
+\begin{lstlisting}
+1: x/i $pc
+=> 0x1005be <kmain+222>:	call   0x100030 <vga_write2>
+\end{lstlisting}
+
+
+Observamos que los resultados para la versión A y la versión B son idénticos.
+
+\subsubsection{Versión final de breakpoint()}
+
+\textbf{Para cada una de las siguientes maneras de guardar/restaurar registros en breakpoint, indicar si es correcto (en el sentido de hacer su ejecución “invisible”), y justificar por qué:}
+
+\begin{list}{•}{}
+\item Opción A:\newline
+Este método es seguro ya que guarda todos los registros y los restaura al finalizar la llamada, por lo que hace su ejecución invisible para la función llamadora.
+\item Opción B:\newline
+Este método también es seguro ya que guarda los registros que son caller safe y los restaura al finalizar lo que tenía que hacer.
+\item Opción C:\newline
+Este método no es seguro porque no te garantiza que los registros eax, edx y ecx no sean alterados por el código representado por puntos suspensivos.
+\end{list}
+
+\textbf{Responder de nuevo la pregunta anterior, sustituyendo en el código vga\_write2 por vga\_write.}
+
+Sucede lo mismo que para la versión con vga\_write2. Para la opción C, nada te garantiza que los registros que no son callee safe (eax, edx, ecx) no sean alterados por vga\_write.
+
+\subsection{kern2-irq}
+
+...
+
+\subsection{kern2-div}
+
+\subsection*{Explicar el funcionamiento exacto de la línea asm(...) del punto anterior: }
+
+\begin{list}{•}{}
+\item \textbf{¿Qué cómputo se está realizando?} \newline
+Se está dividiendo por cero.
+
+\item \textbf{¿De dónde sale el valor de la variable color} \newline
+El valor de la variable color sale del campo "1"(0xE0), donde el valor asignado es 0xE0.
+
+\item \textbf{¿Por qué se da el valor 0 a \%edx?} \newline
+Porque ante una división por cero, al no haber un valor conocido, se indica como que el resultado es 0 por defecto.
+
+\end{list}
+
+\section{Anexo}
+
+\subsubsection{contador.c}
+\lstinputlisting[language=C]{contador.c}
+\subsubsection{handlers.c}
+\lstinputlisting[language=C]{handlers.c}
+\subsubsection{interrupts.c}
+\lstinputlisting[language=C]{interrupts.c}
+\subsubsection{kern.c}
+\lstinputlisting[language=C]{kern.c}
+\subsubsection{write.c}
+\lstinputlisting[language=C]{write.c}
+\subsubsection{boot.S}
+\lstinputlisting[language=C]{boot.S}
+\subsubsection{funcs.S}
+\lstinputlisting[language=C]{funcs.S}
+\subsubsection{idtentry.S}
+\lstinputlisting[language=C]{idt_entry.S}
+\subsubsection{stack.S}
+\lstinputlisting[language=C]{stack.S}
+\subsubsection{tasks.S}
+\lstinputlisting[language=C]{tasks.S}
+
+\subsubsection{lib/decls.h}
+\lstinputlisting[language=C]{lib/decls.h}
+\subsubsection{lib/interrupts.h}
+\lstinputlisting[language=C]{lib/interrupts.h}
+\subsubsection{lib/multiboot.h}
+\lstinputlisting[language=C]{lib/multiboot.h}
+\subsubsection{lib/string.c}
+\lstinputlisting[language=C]{lib/string.c}
+\subsubsection{lib/string.h}
+\lstinputlisting[language=C]{lib/string.h}
+
+\end{document}
